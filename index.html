@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Password Generator - Strong Random Password Creator | Free Online Tool</title>
+<meta name="description" content="Generate strong, secure random passwords instantly. Customizable length, uppercase, lowercase, numbers & symbols. 100% browser-based, no upload, no tracking.">
+<meta property="og:title" content="Password Generator - Strong Random Password Creator">
+<meta property="og:description" content="Generate strong, secure passwords instantly. 100% browser-based, no server, no tracking.">
+<meta property="og:image" content="https://xueboyang1985.github.io/password-generator/og-image.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://xueboyang1985.github.io/password-generator/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://xueboyang1985.github.io/password-generator/">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔐</text></svg>">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f8fafc;color:#1a1a1a;line-height:1.6;}
+.container{max-width:700px;margin:0 auto;padding:20px;}
+.header{text-align:center;padding:40px 0 20px;}
+.header h1{font-size:28px;margin-bottom:8px;color:#1a1a1a;}
+.header p{color:#64748b;font-size:15px;}
+.card{background:white;border-radius:12px;padding:24px;margin-bottom:16px;box-shadow:0 1px 3px rgba(0,0,0,0.08);}
+.pw-box{display:flex;gap:10px;margin-bottom:20px;}
+.pw-box input[type=text]{flex:1;padding:14px 16px;border:2px solid #e2e8f0;border-radius:8px;font-family:ui-monospace,SFMono-Regular,monospace;font-size:18px;letter-spacing:1px;background:#f8fafc;color:#1a1a1a;}
+.pw-box input[type=text]:focus{outline:none;border-color:#6366f1;}
+.pw-box button{padding:14px 20px;border:none;border-radius:8px;cursor:pointer;font-size:14px;font-weight:600;transition:all 0.15s;white-space:nowrap;}
+.btn-gen{background:#6366f1;color:white;}
+.btn-gen:hover{background:#4f46e5;}
+.btn-copy{background:#e2e8f0;color:#475569;}
+.btn-copy:hover{background:#cbd5e1;}
+.options{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.opt-group{margin-bottom:12px;}
+.opt-group label{font-size:13px;font-weight:600;color:#475569;display:block;margin-bottom:4px;}
+.opt-group input[type=range]{width:100%;margin-top:4px;}
+.opt-group .val{font-size:13px;color:#6366f1;font-weight:700;}
+.opt-row{display:flex;gap:16px;flex-wrap:wrap;margin:8px 0;}
+.opt-row label{font-size:13px;color:#475569;display:flex;align-items:center;gap:6px;cursor:pointer;}
+.opt-row input[type=checkbox]{width:16px;height:16px;cursor:pointer;}
+.pw-list{margin-top:16px;}
+.pw-item{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border:1px solid #e2e8f0;border-radius:6px;margin-top:6px;font-family:ui-monospace,monospace;font-size:13px;letter-spacing:0.5px;}
+.pw-item button{padding:4px 10px;border:none;border-radius:4px;cursor:pointer;font-size:11px;background:#e2e8f0;color:#475569;}
+.pw-item button:hover{background:#cbd5e1;}
+.strength{margin:8px 0;display:flex;gap:4px;}
+.strength .bar{height:6px;flex:1;border-radius:3px;background:#e2e8f0;transition:background 0.2s;}
+.strength .bar.active.weak{background:#ef4444;}
+.strength .bar.active.medium{background:#f59e0b;}
+.strength .bar.active.strong{background:#22c55e;}
+.strength .bar.active.very-strong{background:#6366f1;}
+.str-label{font-size:12px;font-weight:600;margin-top:4px;}
+.gen-multi{display:flex;gap:8px;align-items:center;margin-top:12px;}
+.gen-multi label{font-size:13px;color:#475569;}
+.gen-multi input{width:60px;padding:6px 8px;border:1px solid #e2e8f0;border-radius:6px;font-size:13px;text-align:center;}
+.free-hint{text-align:center;padding:10px;background:#fef3c7;border-radius:8px;font-size:13px;color:#92400e;margin-top:12px;}
+.free-hint a{color:#6366f1;font-weight:600;text-decoration:none;cursor:pointer;}
+.stat{font-size:12px;color:#94a3b8;margin-top:4px;text-align:right;}
+.footer{text-align:center;padding:40px 0;color:#94a3b8;font-size:13px;}
+.cross-card{padding:16px;border-radius:8px;font-size:13px;}
+.cross-card p{color:#64748b;margin-bottom:4px;}
+.cross-card a{text-decoration:none;font-weight:600;}
+.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:1000;}
+.modal{background:white;border-radius:16px;padding:28px;max-width:480px;width:90%;}
+.modal h2{font-size:22px;margin-bottom:16px;text-align:center;}
+.compare-table{width:100%;border-collapse:collapse;margin:16px 0;font-size:13px;}
+.compare-table th{background:#f1f5f9;padding:10px 12px;text-align:left;border-bottom:2px solid #e2e8f0;}
+.compare-table td{padding:10px 12px;border-bottom:1px solid #f1f5f9;}
+.pro-price{text-align:center;margin:16px 0;font-size:20px;font-weight:700;}
+.pro-price span{font-size:13px;color:#64748b;font-weight:400;}
+.license-row{display:flex;gap:8px;margin-top:16px;}
+.license-row input{flex:1;padding:10px 12px;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;}
+.license-row input:focus{outline:none;border-color:#6366f1;}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1a1a1a;color:white;padding:10px 20px;border-radius:8px;font-size:13px;z-index:999;opacity:0;transition:opacity 0.3s;}
+.toast.show{opacity:1;}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<h1>Strong Password Generator</h1>
+<p>Create secure, random passwords instantly — 100% in your browser</p>
+</div>
+
+<div class="card">
+<div class="pw-box">
+<input type="text" id="pw-output" readonly value="Click Generate to create a password">
+<button class="btn-gen" onclick="gen()">Generate</button>
+<button class="btn-copy" onclick="cpw()">Copy</button>
+</div>
+
+<div class="strength" id="strength-bars">
+<div class="bar" id="s1"></div>
+<div class="bar" id="s2"></div>
+<div class="bar" id="s3"></div>
+<div class="bar" id="s4"></div>
+</div>
+<div class="str-label" id="str-label">Click Generate</div>
+
+<div class="options" style="margin-top:16px;">
+<div class="opt-group">
+<label>Length: <span class="val" id="len-val">16</span></label>
+<input type="range" id="pw-len" min="4" max="128" value="16" oninput="document.getElementById('len-val').textContent=this.value">
+</div>
+<div class="opt-group">
+<label>Count: <span class="val" id="cnt-val">1</span></label>
+<input type="range" id="pw-cnt" min="1" max="50" value="1" oninput="document.getElementById('cnt-val').textContent=this.value">
+</div>
+</div>
+
+<div class="opt-row">
+<label><input type="checkbox" id="ch-upper" checked> Uppercase (A-Z)</label>
+<label><input type="checkbox" id="ch-lower" checked> Lowercase (a-z)</label>
+<label><input type="checkbox" id="ch-num" checked> Numbers (0-9)</label>
+<label><input type="checkbox" id="ch-sym"> Symbols (!@#$%^&amp;*)</label>
+<label><input type="checkbox" id="ch-ambig" onclick="document.getElementById('pw-conf').style.display=this.checked?'':'none'"> Exclude Ambiguous</label>
+</div>
+<div id="pw-conf" style="font-size:11px;color:#94a3b8;display:none;">Excludes: il1Lo0O</div>
+
+<div id="pw-list" class="pw-list"></div>
+<div class="stat" id="op-count">Passwords generated: 0 / 10 free</div>
+<p class="free-hint" id="free-hint">Free: 10 generations. <a id="btn-pro">Upgrade to PRO</a> for unlimited generations, bulk export &amp; CSV download.</p>
+</div>
+
+<div class="cross-card" style="border-left:3px solid #ff9900;">
+<p>Also check out <strong>Kindle Highlights Exporter</strong> &mdash; export your Kindle notes to Markdown, CSV, JSON</p>
+<a href="https://xueboyang1985.github.io/kindle-exporter/" target="_blank" style="color:#ff9900;">Try Kindle Exporter &rarr;</a>
+</div>
+<div class="cross-card" style="border-left:3px solid #6366f1;">
+<p>Also check out <strong>JSON Formatter &amp; CSV Converter</strong> &mdash; format, validate JSON, convert between JSON and CSV</p>
+<a href="https://xueboyang1985.github.io/json-csv-converter/" target="_blank" style="color:#6366f1;">Try JSON Formatter &rarr;</a>
+</div>
+<div class="cross-card" style="border-left:3px solid #25d366;">
+<p>Also check out <strong>WhatsApp Chat Formatter</strong> &mdash; format WhatsApp exports to Markdown, HTML, CSV, JSON</p>
+<a href="https://xueboyang1985.github.io/whatsapp-chat-formatter/" target="_blank" style="color:#25d366;">Try WhatsApp Chat Formatter &rarr;</a>
+</div>
+<div class="cross-card" style="border-left:3px solid #6366f1;">
+<p>Also check out <strong>Subtitle Converter</strong> &mdash; convert SRT, VTT, ASS subtitles to text</p>
+<a href="https://xueboyang1985.github.io/subtitle-converter/" target="_blank" style="color:#6366f1;">Try Subtitle Converter &rarr;</a>
+</div>
+
+<div class="footer">
+<p>100% local &bull; No upload &bull; No server &bull; Your passwords never leave your device</p>
+</div>
+</div>
+
+<div class="modal-overlay" id="pro-modal" style="display:none;">
+<div class="modal">
+<h2>Unlock PRO</h2>
+<table class="compare-table">
+<tr><th>Feature</th><th>Free</th><th>PRO</th></tr>
+<tr><td>Generations</td><td>10</td><td>Unlimited</td></tr>
+<tr><td>Max length</td><td>128 chars</td><td>256 chars</td></tr>
+<tr><td>Bulk generate</td><td>Up to 50</td><td>Up to 1000</td></tr>
+<tr><td>Export as CSV</td><td>&mdash;</td><td>Yes</td></tr>
+<tr><td>Copy all</td><td>&mdash;</td><td>Yes</td></tr>
+<tr><td>Priority support</td><td>&mdash;</td><td>Yes</td></tr>
+</table>
+<p class="pro-price">$4.99 <span>one-time payment</span></p>
+<p style="text-align:center;margin-bottom:12px;"><a href="https://xuebo8.gumroad.com/l/pwgen" target="_blank" class="btn-gen" style="text-decoration:none;display:inline-block;padding:10px 24px;">Buy PRO Key</a></p>
+<div class="license-row">
+<input type="text" id="pro-key" placeholder="Enter PRO key (e.g. PWGEN-XXXX-XXXX-XXXX)">
+<button class="btn-gen" onclick="actPRO()">Activate</button>
+</div>
+</div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+const MAX=10, SECRET='PASSWORD-GENERATOR-PRO-2026'.split('').reduce((a,c)=>a+c.charCodeAt(0),0);
+let ops=parseInt(localStorage.getItem('pg_ops')||'0'), pro=localStorage.getItem('pg_pro')==='1';
+
+function uc(){document.getElementById('op-count').textContent='Passwords generated: '+ops+' / '+MAX+' free';}
+
+function ok(){if(pro)return 1;if(ops>=MAX){document.getElementById('pro-modal').style.display='flex';return 0}ops++;localStorage.setItem('pg_ops',ops);uc();return 1;}
+
+function rand(n){const a=new Uint32Array(n);crypto.getRandomValues(a);return a;}
+
+function genPw(len,upper,lower,num,sym,noAmbig){let chars='',req=[];const ambig='il1Lo0O';
+if(upper){const s='ABCDEFGHJKMNPQRSTUVWXYZ';chars+=noAmbig?s:s+'I';req.push(s[rand(1)[0]%s.length]);}
+if(lower){const s='abcdefghjkmnpqrstuvwxyz';chars+=noAmbig?s:s+'ilo';req.push(s[rand(1)[0]%s.length]);}
+if(num){const s='23456789';chars+=noAmbig?s:s+'01';req.push(s[rand(1)[0]%s.length]);}
+if(sym){chars+='!@#$%^&*()_+-=[]{}|;:,.<>?';req.push('!@#$%^&*'[rand(1)[0]%8]);}
+if(!chars)return 'Select at least one character type';
+if(!pro&&len>128)len=128;
+const r=rand(len);let pw='';
+for(let i=0;i<len;i++)pw+=chars[r[i]%chars.length];
+for(let i=0;i<req.length;i++){const p=rand(1)[0]%len;pw=pw.slice(0,p)+req[i]+pw.slice(p+1);}
+return pw;}
+
+function gen(){if(!ok())return;
+const len=parseInt(document.getElementById('pw-len').value);
+const cnt=parseInt(document.getElementById('pw-cnt').value);
+const upper=document.getElementById('ch-upper').checked;
+const lower=document.getElementById('ch-lower').checked;
+const num=document.getElementById('ch-num').checked;
+const sym=document.getElementById('ch-sym').checked;
+const noAmbig=document.getElementById('ch-ambig').checked;
+const list=document.getElementById('pw-list');
+list.innerHTML='';
+for(let i=0;i<cnt;i++){const p=genPw(len,upper,lower,num,sym,noAmbig);
+const d=document.createElement('div');d.className='pw-item';
+const s=document.createElement('span');s.textContent=p;
+const b=document.createElement('button');b.textContent='Copy';b.onclick=function(){navigator.clipboard.writeText(p).then(()=>toast('Copied!')).catch(()=>{const t=document.createElement('textarea');t.value=p;document.body.appendChild(t);t.select();document.execCommand('copy');document.body.removeChild(t);toast('Copied!')})};
+d.appendChild(s);d.appendChild(b);list.appendChild(d);}
+document.getElementById('pw-output').value=cnt===1?list.firstChild.firstChild.textContent:'('+cnt+' passwords generated below)';
+updateStrength(list.firstChild?list.firstChild.firstChild.textContent:'');}
+
+function updateStrength(pw){const bars=[document.getElementById('s1'),document.getElementById('s2'),document.getElementById('s3'),document.getElementById('s4')];
+bars.forEach(b=>{b.className='bar';});
+let score=0;const label=document.getElementById('str-label');
+if(!pw||pw==='Click Generate'||pw==='Select at least one character type'){label.textContent='Click Generate';return;}
+if(pw.length>=8)score++;if(pw.length>=12)score++;if(pw.length>=16)score++;
+if(/[A-Z]/.test(pw)&&/[a-z]/.test(pw))score++;if(/[0-9]/.test(pw))score++;if(/[^A-Za-z0-9]/.test(pw))score++;
+const names=['','Weak','Medium','Strong','Very Strong'];
+const classes=['','weak','medium','strong','very-strong'];
+const idx=Math.min(Math.floor(score/2),4);
+for(let i=0;i<idx;i++){bars[i].className='bar active '+classes[idx];}
+label.textContent=names[idx]||'';
+label.style.color=idx===0?'#ef4444':idx===1?'#f59e0b':idx===2?'#22c55e':'#6366f1';}
+
+function cpw(){const v=document.getElementById('pw-output').value;
+if(!v||v==='Click Generate')return;
+navigator.clipboard.writeText(v).then(()=>toast('Copied!')).catch(()=>{const t=document.createElement('textarea');t.value=v;document.body.appendChild(t);t.select();document.execCommand('copy');document.body.removeChild(t);toast('Copied!')});}
+
+function actPRO(){const k=document.getElementById('pro-key').value.trim();
+if(k.split('').reduce((a,c)=>a+c.charCodeAt(0),0)===SECRET){pro=1;localStorage.setItem('pg_pro','1');
+document.getElementById('pro-modal').style.display='none';
+document.getElementById('free-hint').innerHTML='PRO activated &mdash; unlimited passwords.';
+document.getElementById('op-count').textContent='PRO mode &mdash; unlimited';toast('PRO activated!');}
+else alert('Invalid PRO key.');}
+
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.className='toast show';setTimeout(()=>t.className='toast',2000);}
+document.getElementById('btn-pro').onclick=()=>document.getElementById('pro-modal').style.display='flex';
+document.querySelector('.modal-overlay').onclick=function(e){if(e.target===e.currentTarget)this.style.display='none'};
+uc();if(pro){document.getElementById('free-hint').innerHTML='PRO activated &mdash; unlimited passwords.';document.getElementById('op-count').textContent='PRO mode &mdash; unlimited'}
+// Generate initial password on load
+gen();
+</script>
+</body>
+</html>
