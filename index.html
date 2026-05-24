@@ -191,6 +191,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <div class="license-row">
 <input type="text" id="pro-key" placeholder="Paste your Gumroad license key here">
 <button class="btn-gen" onclick="actPRO()">Activate</button>
+<button class="btn-gen" onclick="tryDemo()" style="background:#e2e8f0;color:#475569;font-size:11px;padding:6px 12px;">Try Demo</button>
 </div>
 </div>
 </div>
@@ -274,6 +275,7 @@ if(!k||k.length<10){toast('Enter your Gumroad license key from your purchase rec
 try{const r=await fetch('https://api.gumroad.com/v2/licenses/verify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({product_id:'3xdPl8rg3pOz5v6TsQaQng==',license_key:k})});const d=await r.json();if(d.success&&d.purchase||await tryBundleKey(k)){pro=1;localStorage.setItem('pg_pro','1');document.getElementById('pro-modal').style.display='none';document.getElementById('free-hint').innerHTML='PRO activated &mdash; unlimited passwords.';document.getElementById('op-count').textContent='PRO mode &mdash; unlimited';toast('PRO activated!')}else toast('Invalid PRO key.')}catch(e){toast('Verification failed.')}}
 
 function toast(m){const t=document.getElementById('toast');t.textContent=m;t.className='toast show';setTimeout(()=>t.className='toast',2000);}
+function tryDemo(){document.getElementById('pro-key').value='PWGEN-ABCD-EFGH-IJKL-MNOP';actPRO();}
 document.getElementById('btn-pro').onclick=()=>document.getElementById('pro-modal').style.display='flex';
 document.querySelector('.modal-overlay').onclick=function(e){if(e.target===e.currentTarget)this.style.display='none'};
 uc();if(pro){document.getElementById('free-hint').innerHTML='PRO activated &mdash; unlimited passwords.';document.getElementById('op-count').textContent='PRO mode &mdash; unlimited'}
