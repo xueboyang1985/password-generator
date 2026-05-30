@@ -174,6 +174,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 </div>
 
 
+<div class="cross-card" style="border-left:3px solid #6366f1;">
+<p>📝 Read the guide: <strong>Secure Random Password Generator</strong> &mdash; how to create uncrackable passwords</p>
+<a href="blog/secure-random-password-online.html" style="color:#6366f1;">Password Generator Guide &rarr;</a>
+</div>
+
+
 <div class="footer">
 <p>100% local &bull; No upload &bull; No server &bull; Your passwords never leave your device</p>
 </div>
@@ -218,7 +224,7 @@ function offlineProChecksum(k) {
 
 function uc(){document.getElementById('op-count').textContent='Passwords generated: '+ops+' / '+MAX+' free';}
 
-function ok(){if(pro)return 1;if(ops>=MAX){document.getElementById('pro-modal').style.display='flex';return 0}ops++;localStorage.setItem('pg_ops',ops);uc();return 1;}
+function ok(){if(pro)return 1;if(ops>=MAX){document.getElementById('pro-modal').style.display='flex';return 0}ops++;try{localStorage.setItem('pg_ops',ops)}catch(e){};uc();return 1;}
 
 function rand(n){const a=new Uint32Array(n);crypto.getRandomValues(a);return a;}
 
@@ -274,7 +280,7 @@ async function actPRO(){const k=document.getElementById('pro-key').value.trim().
 // Try offline key first
 if(k.startsWith('PWGEN-')){
   if(!validateProKeyFormat(k)){toast('Invalid format. Expected: PWGEN-XXXX-XXXX-XXXX-XXXX');return;}
-  if(offlineProChecksum(k)){pro=1;localStorage.setItem('pg_pro','1');document.getElementById('pro-modal').style.display='none';document.getElementById('free-hint').innerHTML='PRO activated &mdash; unlimited passwords.';document.getElementById('op-count').textContent='PRO mode &mdash; unlimited';toast('PRO activated!');return;}
+  if(offlineProChecksum(k)){pro=1;try{localStorage.setItem('pg_pro','1')}catch(e){};document.getElementById('pro-modal').style.display='none';document.getElementById('free-hint').innerHTML='PRO activated &mdash; unlimited passwords.';document.getElementById('op-count').textContent='PRO mode &mdash; unlimited';toast('PRO activated!');return;}
 }
 // Gumroad API
 if(!k||k.length<10){toast('Enter your Gumroad license key from your purchase receipt.');return}
@@ -290,7 +296,7 @@ gen();
 
 // Buy button popup + auto-fill license key from Gumroad receipt
 document.addEventListener('DOMContentLoaded',function(){var btn=document.getElementById('btn-buy-pro');if(btn){btn.addEventListener('click',function(){var url=this.dataset.gumroad;if(!url)return;var w=Math.min(600,window.innerWidth-40);var h=Math.min(700,window.innerHeight-40);var left=Math.max(0,(window.innerWidth-w)/2);var top=Math.max(0,(window.innerHeight-h)/2);var win=window.open(url,'gumroad-checkout','width='+w+',height='+h+',left='+left+',top='+top+',menubar=no,toolbar=no,status=no');if(!win)window.location.href=url;});}});
-window.addEventListener('message',function(e){try{var d=typeof e.data==='string'?JSON.parse(e.data):e.data;if(e.origin.indexOf('gumroad.com')>=0&&d&&d.license_key){document.getElementById('pro-key').value=d.license_key;actPRO();}}catch(e1){}});
+window.addEventListener('message',function(e){try{var d=typeof e.data==='string'?JSON.parse(e.data):e.data;if(e.origin.indexOf('gumroad.com')>=0&&d&&d.success&&d.purchase&&d.license_key){document.getElementById('pro-key').value=d.license_key;actPRO();}}catch(e1){}});
 </script>
 
 
@@ -298,6 +304,6 @@ window.addEventListener('message',function(e){try{var d=typeof e.data==='string'
 // Buy PRO button - open Gumroad checkout popup
 document.addEventListener('DOMContentLoaded',function(){var btn=document.getElementById('btn-buy-pro');if(btn){btn.addEventListener('click',function(){var url=this.dataset.gumroad;if(!url)return;var w=Math.min(600,window.innerWidth-40);var h=Math.min(700,window.innerHeight-40);var left=Math.max(0,(window.innerWidth-w)/2);var top=Math.max(0,(window.innerHeight-h)/2);var win=window.open(url,'gumroad-checkout','width='+w+',height='+h+',left='+left+',top='+top+',menubar=no,toolbar=no,status=no');if(!win)window.location.href=url;});}});
 </script>
-<script src="https://gumroad.com/js/gumroad.js"></script>
+<script defer src="https://gumroad.com/js/gumroad.js"></script>
 </body>
 </html>
