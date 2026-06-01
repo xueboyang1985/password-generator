@@ -218,7 +218,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <script>
 const MAX=10;
 const SECRET='PWGEN-ABCD-EFGH-IJKL-MNOP'.split('').reduce((a,c)=>a+c.charCodeAt(0),0);
-let ops=0, pro=0; try { ops=parseInt(localStorage.getItem('pg_ops')||'0'); pro=localStorage.getItem('pg_pro')==='1'; } catch(e) {}
+let ops=0, pro=0, trial=3; try { ops=parseInt(localStorage.getItem('pg_ops')||'0'); pro=localStorage.getItem('pg_pro')==='1'; } catch(e) {}
 
 function validateProKeyFormat(k) {
   return /^PWGEN-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(k);
@@ -227,9 +227,9 @@ function offlineProChecksum(k) {
   return k.split('').reduce((a,c)=>a+c.charCodeAt(0),0)===SECRET;
 }
 
-function uc(){document.getElementById('op-count').textContent='Passwords generated: '+ops+' / '+MAX+' free';}
+function uc(){var t='Passwords generated: '+ops+' / '+MAX+' free';if(trial>0&&!pro)t+=' · Trial PRO: '+trial+' left';document.getElementById('op-count').textContent=t;}
 
-function ok(){if(pro)return 1;if(ops>=MAX){document.getElementById('pro-modal').style.display='flex';return 0}ops++;try{localStorage.setItem('pg_ops',ops)}catch(e){};uc();return 1;}
+function ok(){if(pro)return 1;if(ops>=MAX){if(trial>0){trial--;ops++;uc();return 1}document.getElementById('pro-modal').style.display='flex';return 0}ops++;try{localStorage.setItem('pg_ops',ops)}catch(e){};uc();return 1;}
 
 function rand(n){const a=new Uint32Array(n);crypto.getRandomValues(a);return a;}
 
