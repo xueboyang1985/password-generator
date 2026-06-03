@@ -140,8 +140,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <div id="pw-conf" style="font-size:11px;color:#94a3b8;display:none;">Excludes: il1Lo0O</div>
 
 <div id="pw-list" class="pw-list"></div>
-<div class="stat" id="op-count">Passwords generated: 0 / 10 free</div>
-<p class="free-hint" id="free-hint">Free: 10 generations. <a id="btn-pro">Upgrade to PRO</a> for unlimited generations, bulk export &amp; CSV download.</p>
+<div class="stat" id="op-count">Single password: always free &bull; Bulk (up to 5): free</div>
+<p class="free-hint" id="free-hint">Need more? <a id="btn-pro">PRO</a> unlocks bulk up to 100, CSV export &amp; password history. One-time $9.99.</p>
 </div>
 
 <div class="cross-card" style="border-left:3px solid #6366f1;">
@@ -216,9 +216,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <div id="toast" class="toast"></div>
 
 <script>
-const MAX=10;
+const BULK_FREE_MAX=5;
 const SECRET='PWGEN-ABCD-EFGH-IJKL-MNOP'.split('').reduce((a,c)=>a+c.charCodeAt(0),0);
-let ops=0, pro=0, trial=3; try { ops=parseInt(localStorage.getItem('pg_ops')||'0'); pro=localStorage.getItem('pg_pro')==='1'; } catch(e) {}
+let pro=0; try { pro=localStorage.getItem('pg_pro')==='1'; } catch(e) {}
 
 function validateProKeyFormat(k) {
   return /^PWGEN-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(k);
@@ -227,9 +227,7 @@ function offlineProChecksum(k) {
   return k.split('').reduce((a,c)=>a+c.charCodeAt(0),0)===SECRET;
 }
 
-function uc(){var t='Passwords generated: '+ops+' / '+MAX+' free';if(trial>0&&!pro)t+=' · Trial PRO: '+trial+' left';document.getElementById('op-count').textContent=t;}
-
-function ok(){if(pro)return 1;if(ops>=MAX){if(trial>0){trial--;ops++;uc();return 1}document.getElementById('pro-modal').style.display='flex';return 0}ops++;try{localStorage.setItem('pg_ops',ops)}catch(e){};uc();return 1;}
+function ok(bulkCount){if(pro)return 1;if(bulkCount>BULK_FREE_MAX){document.getElementById('pro-modal').style.display='flex';return 0}return 1;}
 
 function rand(n){const a=new Uint32Array(n);crypto.getRandomValues(a);return a;}
 
@@ -245,9 +243,9 @@ for(let i=0;i<len;i++)pw+=chars[r[i]%chars.length];
 for(let i=0;i<req.length;i++){const p=rand(1)[0]%len;pw=pw.slice(0,p)+req[i]+pw.slice(p+1);}
 return pw;}
 
-function gen(){if(!ok())return;
-const len=parseInt(document.getElementById('pw-len').value);
+function gen(){
 const cnt=parseInt(document.getElementById('pw-cnt').value);
+if(!ok(cnt))return;
 const upper=document.getElementById('ch-upper').checked;
 const lower=document.getElementById('ch-lower').checked;
 const num=document.getElementById('ch-num').checked;
@@ -285,17 +283,17 @@ async function actPRO(){const k=document.getElementById('pro-key').value.trim().
 // Try offline key first
 if(k.startsWith('PWGEN-')){
   if(!validateProKeyFormat(k)){toast('Invalid format. Expected: PWGEN-XXXX-XXXX-XXXX-XXXX');return;}
-  if(offlineProChecksum(k)){pro=1;try{localStorage.setItem('pg_pro','1')}catch(e){};document.getElementById('pro-modal').style.display='none';document.getElementById('free-hint').innerHTML='PRO activated &mdash; unlimited passwords.';document.getElementById('op-count').textContent='PRO mode &mdash; unlimited';toast('PRO activated!');return;}
+  if(offlineProChecksum(k)){pro=1;try{localStorage.setItem('pg_pro','1')}catch(e){};document.getElementById('pro-modal').style.display='none';document.getElementById('free-hint').innerHTML='PRO activated &mdash; unlimited passwords.';document.getElementById('op-count').textContent='PRO mode &mdash; all features unlocked';toast('PRO activated!');return;}
 }
 // Gumroad API
 if(!k||k.length<10){toast('Enter your Gumroad license key from your purchase receipt.');return}
-try{const r=await fetch('https://api.gumroad.com/v2/licenses/verify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({product_id:'3xdPl8rg3pOz5v6TsQaQng==',license_key:k})});const d=await r.json();if(d.success&&d.purchase||await tryBundleKey(k)){pro=1;localStorage.setItem('pg_pro','1');document.getElementById('pro-modal').style.display='none';document.getElementById('free-hint').innerHTML='PRO activated &mdash; unlimited passwords.';document.getElementById('op-count').textContent='PRO mode &mdash; unlimited';toast('PRO activated!')}else toast('Invalid PRO key.')}catch(e){toast('Verification failed.')}}
+try{const r=await fetch('https://api.gumroad.com/v2/licenses/verify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({product_id:'3xdPl8rg3pOz5v6TsQaQng==',license_key:k})});const d=await r.json();if(d.success&&d.purchase||await tryBundleKey(k)){pro=1;try{localStorage.setItem('pg_pro','1')}catch(e){};document.getElementById('pro-modal').style.display='none';document.getElementById('free-hint').innerHTML='PRO activated &mdash; unlimited passwords.';document.getElementById('op-count').textContent='PRO mode &mdash; all features unlocked';toast('PRO activated!')}else toast('Invalid PRO key.')}catch(e){toast('Verification failed.')}}
 
 function toast(m){const t=document.getElementById('toast');t.textContent=m;t.className='toast show';setTimeout(()=>t.className='toast',2000);}
 function tryDemo(){document.getElementById('pro-key').value='PWGEN-ABCD-EFGH-IJKL-MNOP';actPRO();}
 document.getElementById('btn-pro').onclick=()=>document.getElementById('pro-modal').style.display='flex';
 document.querySelector('.modal-overlay').onclick=function(e){if(e.target===e.currentTarget)this.style.display='none'};
-uc();if(pro){document.getElementById('free-hint').innerHTML='PRO activated &mdash; unlimited passwords.';document.getElementById('op-count').textContent='PRO mode &mdash; unlimited'}
+if(pro){document.getElementById('free-hint').innerHTML='PRO activated &mdash; unlimited everything.';document.getElementById('op-count').textContent='PRO mode &mdash; all features unlocked'}
 // Generate initial password on load
 gen();
 
